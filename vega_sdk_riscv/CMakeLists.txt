@@ -14,3 +14,6 @@ else()
 endif()
 
 add_subdirectory(devices/RV32M1/drivers)
+add_subdirectory(middleware)
+
+zephyr_compile_definitions(XCVR_GENFSK_ENABLED)
