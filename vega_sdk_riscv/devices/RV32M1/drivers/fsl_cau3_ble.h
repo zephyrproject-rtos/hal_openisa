@@ -85,6 +85,7 @@ typedef struct _cau3_handle
 {
     cau3_task_done_t taskDone; /*!< Specify CAU3 task done signalling to Host CPU. */
     cau3_key_slot_t keySlot; /*!< For operations with key (such as AES encryption/decryption), specify CAU3 key slot. */
+    uint8_t micPassed; /*!< For decryption, store the status of the MIC validation. */
 } cau3_handle_t;
 
 /*! @} */
@@ -125,6 +126,9 @@ typedef enum _cau3_hash_algo_t {
 
 /*! @brief CAU3 HASH Context size. */
 #define CAU3_HASH_CTX_SIZE 58
+
+/*! @brief MAC size for BLE (called MIC). */
+#define CAU3_BLE_MIC_SIZE 4
 
 /*! @brief Storage type used to save hash context. */
 typedef struct _cau3_hash_ctx_t

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "fsl_cau3.h"
+#include "fsl_cau3_ble.h"
 
 /*******************************************************************************
  * Definitions
@@ -1218,6 +1218,7 @@ static int cau3_aes_ccm_decrypt(CAU3_Type *base,
                                 uint32_t nonceSz,
                                 const uint8_t *authTag,
                                 uint32_t authTagSz,
+                                uint8_t *authPassed,
                                 const uint8_t *authIn,
                                 uint32_t authInSz)
 {
@@ -1273,7 +1274,10 @@ static int cau3_aes_ccm_decrypt(CAU3_Type *base,
     if (memcmp(xPtr, tPtr, authTagSz) != 0) {
         // If the authTag check fails, don't keep the decrypted data.
         memset(out, 0, inSz);
+        *authPassed = 0;
         return (completionStatus);
+    } else {
+        *authPassed = 1;
     }
 
     cau3_aes_ccm_clear_mem(xPtr, aPtr, CAU3_AES_BLOCK_SIZE);
@@ -1319,15 +1323,17 @@ uint32_t CAU3_AES_CCM_DecryptTag(CAU3_Type *base,
                                  size_t authTagSize)
 {
     status_t completionStatus;
+    uint8_t authPassed = 0;
 
     completionStatus = cau3_aes_ccm_decrypt(base, handle->keySlot, plainText, cipherText, plainTextSize,
-                                            nonce, nonceSize, authTag, authTagSize, aad, aadSize);
+                                            nonce, nonceSize, authTag, authTagSize, &authPassed, aad, aadSize);
 
     if (completionStatus != kStatus_Success)
         CAU3_ForceError(base, handle->taskDone);
     else
         completionStatus = cau3_execute_null_task(base, handle->taskDone);
 
+    handle->micPassed = authPassed;
     return (completionStatus);
 }
 
