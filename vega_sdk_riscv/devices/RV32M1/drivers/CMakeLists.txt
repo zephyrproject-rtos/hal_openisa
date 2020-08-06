@@ -1,6 +1,7 @@
 zephyr_include_directories(.)
 
 zephyr_library_sources(fsl_clock.c)
+zephyr_library_sources(fsl_wdog32.c)
 zephyr_library_sources_ifdef(CONFIG_ENTROPY_RV32M1_TRNG		fsl_trng.c)
 zephyr_library_sources_ifdef(CONFIG_HAS_RV32M1_CAU3_BLE		fsl_cau3_ble.c)
 zephyr_library_sources_ifdef(CONFIG_I2C_RV32M1_LPI2C		fsl_lpi2c.c)
