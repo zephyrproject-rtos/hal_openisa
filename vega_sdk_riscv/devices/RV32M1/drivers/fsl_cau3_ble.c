@@ -4077,6 +4077,11 @@ status_t CAU3_CHACHA20_POLY1305_SetKey(CAU3_Type *base, cau3_handle_t *handle, c
 
 static status_t cau3_load_nonce(CAU3_Type *base, const uint8_t *nonce, cau3_key_slot_t keySlot)
 {
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
+
     union {
         uint8_t b[16];
         uint32_t w[4];
@@ -4092,6 +4097,9 @@ static status_t cau3_load_nonce(CAU3_Type *base, const uint8_t *nonce, cau3_key_
     tempIv.w[2] = __REV(tempIv.w[2]);
 
     return CAU3_LoadKeyInitVector(base, tempIv.b, keySlot, kCAU3_TaskDonePoll);
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 }
 
 status_t CAU3_CHACHA20_POLY1305_Encrypt(CAU3_Type *base,
