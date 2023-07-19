@@ -24,7 +24,7 @@
 #define trunc(x) (uint32_t)(x)
 /* This works correctly only for positive numbers... */
 #define round(x) (uint32_t)((x) + 0.5)
-#define roundf(x) (float)(uint32_t)((x) + 0.5)
+#define roundf(x) (float)(uint32_t)((x) + 0.5f)
 #endif
 
 
